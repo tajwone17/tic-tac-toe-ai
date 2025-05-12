@@ -5,10 +5,35 @@ const msgContainer = document.querySelector(".msg-container");
 const msg = document.getElementById("msg");
 const newGameBtn = document.getElementById("new-btn");
 const resetBtn = document.getElementById("reset-btn");
+const playerNameDisplay = document.getElementById("player-name");
+const playerScoreDisplay = document.getElementById("player-score");
+const computerScoreDisplay = document.getElementById("computer-score");
+
+let playerName = "";
+let scores = {
+  player: 0,
+  computer: 0,
+};
 
 let gameActive = true;
 let currentPlayer = "X";
 let gameState = ["", "", "", "", "", "", "", "", ""];
+
+// Get player name when the page loads
+function getPlayerName() {
+  let name = prompt("Enter your name:", "Player");
+  if (!name) name = "Player";
+  playerName = name;
+  playerNameDisplay.textContent = playerName;
+
+  // Clear default "X" from player name display
+  if (playerNameDisplay.textContent === "X") {
+    playerNameDisplay.textContent = playerName;
+  }
+}
+
+// Initialize player name
+window.addEventListener("load", getPlayerName);
 
 const winningConditions = [
   [0, 1, 2],
@@ -42,12 +67,12 @@ function handleBoxClick(event) {
 function updateGameState(index) {
   gameState[index] = currentPlayer;
   boxes[index].textContent = currentPlayer;
-  
+
   // Add player-specific class for styling
-  if (currentPlayer === 'X') {
-    boxes[index].classList.add('player-x');
+  if (currentPlayer === "X") {
+    boxes[index].classList.add("player-x");
   } else {
-    boxes[index].classList.add('player-o');
+    boxes[index].classList.add("player-o");
   }
 }
 
@@ -65,7 +90,31 @@ function checkResult() {
   }
 
   if (roundWon) {
-    msg.textContent = `${currentPlayer} has won!`;
+    if (currentPlayer === "X") {
+      msg.textContent = `${playerName} has won!`;
+      scores.player++;
+      playerScoreDisplay.textContent = scores.player;
+      // Add animation effect to player score
+      const playerScoreContainer = document.querySelector(
+        ".player-score-container"
+      );
+      playerScoreContainer.classList.add("score-updated");
+      setTimeout(() => {
+        playerScoreContainer.classList.remove("score-updated");
+      }, 1000);
+    } else {
+      msg.textContent = `Computer has won!`;
+      scores.computer++;
+      computerScoreDisplay.textContent = scores.computer;
+      // Add animation effect to computer score
+      const computerScoreContainer = document.querySelector(
+        ".computer-score-container"
+      );
+      computerScoreContainer.classList.add("score-updated");
+      setTimeout(() => {
+        computerScoreContainer.classList.remove("score-updated");
+      }, 1000);
+    }
     gameActive = false;
     msgContainer.classList.remove("hide");
     return;
@@ -106,9 +155,12 @@ function resetGame() {
   gameState = ["", "", "", "", "", "", "", "", ""];
   boxes.forEach((box) => {
     box.textContent = "";
-    box.classList.remove('player-x', 'player-o');
+    box.classList.remove("player-x", "player-o");
   });
   msgContainer.classList.add("hide");
+
+  // Always ensure player name is displayed correctly
+  playerNameDisplay.textContent = playerName;
 }
 
 boxes.forEach((box) => box.addEventListener("click", handleBoxClick));
