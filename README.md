@@ -49,6 +49,6 @@ The game features an AI opponent that uses the Minimax algorithm implemented in 
 - Add sound effects
 - Create a multiplayer mode
 - Add animations for winning combinations
-
+## Live Demo:https://tajwone17.github.io/tic-tac-toe-ai/
 Enjoy playing and may the best player (or algorithm) win!
 "# tic-tac-toe-ai" 
